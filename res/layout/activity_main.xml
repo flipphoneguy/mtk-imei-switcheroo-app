@@ -51,48 +51,21 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Current IMEI card -->
+            <!-- Loading placeholder, swapped for dynamically inflated slot rows -->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_current_imei"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:layout_marginBottom="6dp" />
-
-            <TextView
-                android:id="@+id/current_imei"
+                android:id="@+id/loading_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_summary"
-                android:padding="16dp"
                 android:text="@string/loading"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="monospace"
-                android:textIsSelectable="true"
-                android:layout_marginBottom="22dp" />
-
-            <!-- New IMEI input -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_new_imei"
                 android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:layout_marginBottom="6dp" />
+                android:textSize="14sp"
+                android:padding="12dp" />
 
-            <EditText
-                android:id="@+id/input_imei"
+            <LinearLayout
+                android:id="@+id/slots_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/EditField"
-                android:hint="@string/hint_new_imei"
-                android:inputType="number"
-                android:maxLength="15"
-                android:fontFamily="monospace"
-                android:layout_marginBottom="12dp" />
+                android:orientation="vertical" />
 
             <Button
                 android:id="@+id/btn_change"
@@ -100,6 +73,7 @@
                 android:layout_height="48dp"
                 android:text="@string/btn_change"
                 style="@style/BtnPrimary"
+                android:enabled="false"
                 android:layout_marginBottom="24dp" />
 
             <!-- History -->

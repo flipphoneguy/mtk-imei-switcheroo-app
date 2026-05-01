@@ -13,8 +13,14 @@
     <string name="btn_use">Use</string>
 
     <string name="label_current_imei">Current IMEI</string>
+    <string name="label_imei_n">IMEI %1$d</string>
     <string name="label_new_imei">New IMEI</string>
+    <string name="label_new_imei_n">New IMEI %1$d</string>
     <string name="label_history">Recent IMEIs</string>
+    <string name="hint_keep">leave blank to keep current</string>
+    <string name="apply_to_slot_title">Apply to which IMEI?</string>
+    <string name="slot_n">IMEI %1$d</string>
+    <string name="err_no_changes">Enter at least one new IMEI.</string>
 
     <string name="hint_new_imei">15 digits</string>
     <string name="empty_history">No previous IMEIs yet.</string>

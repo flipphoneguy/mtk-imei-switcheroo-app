@@ -5,16 +5,19 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Java port of imei_tool.py. AES-128-ECB over the 32-byte IMEI block at
- * offset 0x40, BCD-encoded IMEI plus an MD5-XOR checksum the modem
- * validates on read.
+ * Java port of imei_tool.py, extended to handle both IMEI blocks. Block #1
+ * lives at 0x40, block #2 at 0x60 — both have the same 32-byte structure
+ * (BCD IMEI, 2-byte filler, MD5-XOR checksum, zero padding) and are
+ * AES-128-ECB encrypted with the same key. On single-SIM units block #2
+ * decrypts to all-0x00 or all-0xFF and is treated as absent.
  */
 public final class ImeiCrypto {
 
     public static final int LD0B_SIZE = 384;
-    public static final int HEADER_SIZE = 0x40;
     public static final int IMEI_BLOCK_SIZE = 32;
     public static final int IMEI_BCD_SIZE = 8;
+    public static final int NUM_SLOTS = 2;
+    public static final int[] SLOT_OFFSETS = { 0x40, 0x60 };
 
     private static final byte[] AES_KEY = {
         (byte) 0x3f, (byte) 0x06, (byte) 0xbd, (byte) 0x14,
@@ -35,21 +38,32 @@ public final class ImeiCrypto {
         return true;
     }
 
-    /** Decrypt the IMEI block and decode the BCD IMEI. Returns null if empty/invalid. */
-    public static String readImei(byte[] ld0b) throws Exception {
+    /** Decrypt and decode every slot. Slot is null if empty/absent (single-SIM). */
+    public static String[] readAllImeis(byte[] ld0b) throws Exception {
+        String[] out = new String[NUM_SLOTS];
+        for (int i = 0; i < NUM_SLOTS; i++) out[i] = readImei(ld0b, i);
+        return out;
+    }
+
+    public static String readImei(byte[] ld0b, int slot) throws Exception {
+        int offset = SLOT_OFFSETS[slot];
         byte[] block = new byte[IMEI_BLOCK_SIZE];
-        System.arraycopy(ld0b, HEADER_SIZE, block, 0, IMEI_BLOCK_SIZE);
+        System.arraycopy(ld0b, offset, block, 0, IMEI_BLOCK_SIZE);
         byte[] pt = aesDecrypt(block);
         return bcdToImei(pt, 0);
     }
 
-    /** Returns a fresh 384-byte LD0B_001 with the IMEI rewritten. */
-    public static byte[] patchImei(byte[] ld0b, String imei) throws Exception {
+    /**
+     * Returns a fresh 384-byte LD0B_001 with the requested slot rewritten.
+     * Other slots and surrounding bytes are untouched.
+     */
+    public static byte[] patchImei(byte[] ld0b, int slot, String imei) throws Exception {
         if (!isValidImei(imei)) {
             throw new IllegalArgumentException("IMEI must be 15 digits");
         }
+        int offset = SLOT_OFFSETS[slot];
         byte[] block = new byte[IMEI_BLOCK_SIZE];
-        System.arraycopy(ld0b, HEADER_SIZE, block, 0, IMEI_BLOCK_SIZE);
+        System.arraycopy(ld0b, offset, block, 0, IMEI_BLOCK_SIZE);
         byte[] pt = aesDecrypt(block);
 
         byte[] bcd = imeiToBcd(imei);
@@ -66,7 +80,7 @@ public final class ImeiCrypto {
         byte[] enc = aesEncrypt(pt);
         byte[] out = new byte[LD0B_SIZE];
         System.arraycopy(ld0b, 0, out, 0, LD0B_SIZE);
-        System.arraycopy(enc, 0, out, HEADER_SIZE, IMEI_BLOCK_SIZE);
+        System.arraycopy(enc, 0, out, offset, IMEI_BLOCK_SIZE);
         return out;
     }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="22dp">
+
+    <TextView
+        android:id="@+id/slot_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginBottom="6dp" />
+
+    <TextView
+        android:id="@+id/slot_current"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_summary"
+        android:padding="16dp"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:textIsSelectable="true"
+        android:layout_marginBottom="10dp" />
+
+    <EditText
+        android:id="@+id/slot_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EditField"
+        android:inputType="number"
+        android:maxLength="15"
+        android:fontFamily="monospace" />
+</LinearLayout>
