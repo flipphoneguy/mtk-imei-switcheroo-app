@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light palette -->
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="accent">#00BFA5</color>
+    <color name="warn">#E91E63</color>
+
+    <color name="bg_page">#F0F2F8</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_header">#3F51B5</color>
+    <color name="bg_action_bar">#FAFAFA</color>
+    <color name="bg_summary">#E8EAF6</color>
+
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#5C6370</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="code_color">#00897B</color>
+
+    <color name="item_focused_bg">#DCE1F7</color>
+    <color name="item_pressed_bg">#C5CAF0</color>
+    <color name="item_focused_border">#3F51B5</color>
+
+    <color name="divider">#E0E3F0</color>
+    <color name="card_border">#DDE0EE</color>
+
+    <color name="btn_normal">#3F51B5</color>
+    <color name="btn_focused">#303F9F</color>
+    <color name="btn_pressed">#283593</color>
+    <color name="btn_disabled">#B0B8D8</color>
+
+    <color name="btn_outline_border">#3F51B5</color>
+    <color name="btn_outline_text">#3F51B5</color>
+    <color name="btn_outline_focused_bg">#E8EAF6</color>
+
+    <color name="edit_bg">#FFFFFF</color>
+    <color name="edit_border">#C5CAF0</color>
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IMEI Switcheroo</string>
+
+    <string name="info_title">About</string>
+
+    <string name="btn_about">About</string>
+    <string name="btn_back">←</string>
+    <string name="btn_change">Change IMEI</string>
+    <string name="btn_reboot">Reboot now</string>
+    <string name="btn_later">Later</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_use">Use</string>
+
+    <string name="label_current_imei">Current IMEI</string>
+    <string name="label_new_imei">New IMEI</string>
+    <string name="label_history">Recent IMEIs</string>
+
+    <string name="hint_new_imei">15 digits</string>
+    <string name="empty_history">No previous IMEIs yet.</string>
+    <string name="empty_imei">(empty)</string>
+    <string name="loading">Reading current IMEI…</string>
+
+    <string name="confirm_change_title">Change IMEI?</string>
+    <string name="confirm_change_msg">The new IMEI will be written to NVRAM. A reboot is required for it to take effect.</string>
+
+    <string name="reboot_title">Reboot now?</string>
+    <string name="reboot_msg">The new IMEI is in NVRAM but the modem still has the old value cached until reboot.</string>
+
+    <string name="err_invalid_imei">IMEI must be exactly 15 digits.</string>
+    <string name="err_no_root">Root access denied. Grant this app root in Magisk → Superuser.</string>
+    <string name="err_read_failed">Could not read LD0B_001 from device.</string>
+    <string name="err_pull_size">LD0B_001 is the wrong size — pull may have corrupted the file.</string>
+    <string name="err_write_failed">Could not write the patched file back.</string>
+    <string name="err_decrypt_failed">Could not decrypt the IMEI block.</string>
+    <string name="ok_updated">IMEI updated.</string>
+
+    <string name="info_blurb">Reads and writes the IMEI in the DuoQin F21 Pro\'s NVRAM. Requires root.</string>
+    <string name="info_author">by flipphoneguy</string>
+    <string name="info_credit">Original Python tool and reverse-engineering by alltechdev.</string>
+
+    <string name="info_github_label">My GitHub</string>
+    <string name="info_repo_label">App Repository</string>
+    <string name="info_orig_author_label">alltechdev</string>
+    <string name="info_orig_repo_label">Original Repository</string>
+
+    <string name="info_github_url">https://github.com/flipphoneguy</string>
+    <string name="info_repo_url">https://github.com/flipphoneguy/f21-imei-switcheroo-app</string>
+    <string name="info_orig_author_url">https://github.com/alltechdev</string>
+    <string name="info_orig_repo_url">https://github.com/alltechdev/f21-imei-switcheroo</string>
+</resources>

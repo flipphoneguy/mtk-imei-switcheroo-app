@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_page">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/bg_header"
+        android:gravity="center_vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="4dp"
+        android:orientation="horizontal"
+        android:elevation="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textColor="@color/text_on_primary"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02" />
+
+        <Button
+            android:id="@+id/btn_about"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:text="ⓘ"
+            android:textColor="@color/text_on_primary"
+            android:textSize="20sp"
+            android:focusable="true"
+            android:contentDescription="@string/btn_about" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Current IMEI card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_current_imei"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:id="@+id/current_imei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_summary"
+                android:padding="16dp"
+                android:text="@string/loading"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:textIsSelectable="true"
+                android:layout_marginBottom="22dp" />
+
+            <!-- New IMEI input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_new_imei"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/input_imei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditField"
+                android:hint="@string/hint_new_imei"
+                android:inputType="number"
+                android:maxLength="15"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/btn_change"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/btn_change"
+                style="@style/BtnPrimary"
+                android:layout_marginBottom="24dp" />
+
+            <!-- History -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_history"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:id="@+id/empty_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_history"
+                android:textColor="@color/text_hint"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/history_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

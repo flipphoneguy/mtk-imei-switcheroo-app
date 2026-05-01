@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_page">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/bg_header"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:elevation="4dp">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:text="@string/btn_back"
+            android:textColor="@color/text_on_primary"
+            android:textSize="22sp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/info_title"
+            android:textColor="@color/text_on_primary"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📡"
+                android:textSize="56sp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/version_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_author"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginTop="2dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/info_blurb"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.4"
+                android:gravity="center"
+                android:layout_marginBottom="14dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/info_credit"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:lineSpacingMultiplier="1.4"
+                android:gravity="center"
+                android:layout_marginBottom="22dp" />
+
+            <Button
+                android:id="@+id/btn_github"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="@string/info_github_label"
+                style="@style/BtnPrimary"
+                android:layout_marginBottom="10dp"
+                android:nextFocusUp="@+id/btn_back"
+                android:nextFocusDown="@+id/btn_repo" />
+
+            <Button
+                android:id="@+id/btn_repo"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="@string/info_repo_label"
+                style="@style/BtnOutline"
+                android:layout_marginBottom="18dp"
+                android:nextFocusUp="@+id/btn_github"
+                android:nextFocusDown="@+id/btn_orig_author" />
+
+            <Button
+                android:id="@+id/btn_orig_author"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="@string/info_orig_author_label"
+                style="@style/BtnPrimary"
+                android:layout_marginBottom="10dp"
+                android:nextFocusUp="@+id/btn_repo"
+                android:nextFocusDown="@+id/btn_orig_repo" />
+
+            <Button
+                android:id="@+id/btn_orig_repo"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="@string/info_orig_repo_label"
+                style="@style/BtnOutline"
+                android:nextFocusUp="@+id/btn_orig_author" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

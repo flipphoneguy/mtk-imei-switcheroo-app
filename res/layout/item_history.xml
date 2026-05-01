@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="@drawable/item_bg"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/history_imei"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        android:fontFamily="monospace"
+        android:textIsSelectable="true" />
+
+    <Button
+        android:id="@+id/history_use"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/btn_use"
+        style="@style/BtnOutline"
+        android:minWidth="72dp" />
+</LinearLayout>

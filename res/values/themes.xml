@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/bg_page</item>
+        <item name="android:listSelector">@drawable/item_bg</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+    </style>
+
+    <style name="BtnPrimary">
+        <item name="android:background">@drawable/btn_filled</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="BtnOutline">
+        <item name="android:background">@drawable/btn_outline</item>
+        <item name="android:textColor">@color/btn_outline_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="EditField">
+        <item name="android:background">@drawable/edit_bg</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+</resources>
