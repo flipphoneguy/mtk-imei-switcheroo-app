@@ -114,6 +114,10 @@ public class MainActivity extends Activity {
     }
 
     private void applySlots(String[] imeis, String error) {
+        // Idempotent against re-entry (config change, overlapping loadSlots calls).
+        slotsContainer.removeAllViews();
+        slots.clear();
+
         if (imeis == null) {
             loading.setText(error != null ? error : getString(R.string.err_read_failed));
             loading.setVisibility(View.VISIBLE);

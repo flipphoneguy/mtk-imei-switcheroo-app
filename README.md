@@ -1,6 +1,6 @@
-# f21-imei-switcheroo-app
+# mtk-imei-switcheroo-app
 
-Android app that reads and rewrites the IMEI on a rooted **DuoQin F21 Pro** (also tested on the **Qin F25**) — same crypto and on-device flow as [`alltechdev/f21-imei-switcheroo`](https://github.com/alltechdev/f21-imei-switcheroo), wrapped in a small native UI so you don't need a host PC, ADB, Termux, or Python.
+Android app that reads and rewrites the IMEI on rooted MediaTek MT67xx phones — tested on **DuoQin F21 Pro** (single-SIM), **DuoQin F25** (dual-SIM), and **TIQ M5** (dual-SIM, MT6761). Same crypto and on-device flow as [`alltechdev/mtk-imei-switcheroo`](https://github.com/alltechdev/mtk-imei-switcheroo), wrapped in a small native UI so you don't need a host PC, ADB, Termux, or Python.
 
 Shows the current IMEI(s), lets you type a new one, and remembers the last 5 you've used so you can flip back. Dual-SIM units are detected automatically — both IMEIs are shown side-by-side and you can rewrite either or both in one go. Requires root (Magisk).
 
@@ -20,7 +20,7 @@ Termux build environment with `aapt2`, `ecj`, `d8`, `apksigner`, `zip`, plus `~/
 
 ## How it works
 
-The crypto and binary format are documented in detail in the original repo's [`docs/format.md`](https://github.com/alltechdev/f21-imei-switcheroo/blob/main/docs/format.md) and [`docs/reverse_engineering.md`](https://github.com/alltechdev/f21-imei-switcheroo/blob/main/docs/reverse_engineering.md). The short version: `LD0B_001` at `/mnt/vendor/nvdata/md/NVRAM/NVD_IMEI/` holds the IMEI as an AES-128-ECB encrypted block with a modem-validated MD5-XOR checksum. Rewrite the BCD-encoded IMEI, recompute the checksum, re-encrypt, push it back.
+The crypto and binary format are documented in detail in the original repo's [`docs/format.md`](https://github.com/alltechdev/mtk-imei-switcheroo/blob/main/docs/format.md) and [`docs/reverse_engineering.md`](https://github.com/alltechdev/mtk-imei-switcheroo/blob/main/docs/reverse_engineering.md). The short version: `LD0B_001` at `/mnt/vendor/nvdata/md/NVRAM/NVD_IMEI/` holds the IMEI as an AES-128-ECB encrypted block with a modem-validated MD5-XOR checksum. Rewrite the BCD-encoded IMEI, recompute the checksum, re-encrypt, push it back.
 
 The app does the same dance the shell scripts do, just from inside a single APK:
 
@@ -30,7 +30,7 @@ The app does the same dance the shell scripts do, just from inside a single APK:
 4. Write the patched 384 bytes to the app's cache dir, `su -c "mount -o remount,rw …"`, `cp` into place, `chmod 660`, `chown root:system`.
 5. Offer to reboot — the modem caches the old IMEI until then.
 
-The Java port lives in [`ImeiCrypto.java`](src/com/flipphoneguy/imeiswitcher/ImeiCrypto.java) and is a direct translation of [`imei_tool.py`](https://github.com/alltechdev/f21-imei-switcheroo/blob/main/imei_tool.py) extended to handle the second IMEI slot (no partition-image mode — the app only ever touches the live `LD0B_001`). The on-device steps are in [`RootRunner.java`](src/com/flipphoneguy/imeiswitcher/RootRunner.java) and mirror the `su -c` calls in `termux_patch.sh` / `live_patch.sh`.
+The Java port lives in [`ImeiCrypto.java`](src/com/flipphoneguy/imeiswitcher/ImeiCrypto.java) and is a direct translation of [`imei_tool.py`](https://github.com/alltechdev/mtk-imei-switcheroo/blob/main/imei_tool.py) extended to handle the second IMEI slot (no partition-image mode — the app only ever touches the live `LD0B_001`). The on-device steps are in [`RootRunner.java`](src/com/flipphoneguy/imeiswitcher/RootRunner.java) and mirror the `su -c` calls in `termux_patch.sh` / `live_patch.sh`.
 
 ## History
 
@@ -38,6 +38,6 @@ The app remembers the last 5 IMEIs you've applied (most-recent first, deduplicat
 
 ## Credits
 
-- [alltechdev](https://github.com/alltechdev) — original Python tool, AES key, BCD layout, and the reverse-engineering of the MD5-XOR checksum: [`alltechdev/f21-imei-switcheroo`](https://github.com/alltechdev/f21-imei-switcheroo). All the hard parts come from there; this app is just a UI wrapper.
+- [alltechdev](https://github.com/alltechdev) — original Python tool, AES key, BCD layout, and the reverse-engineering of the MD5-XOR checksum: [`alltechdev/mtk-imei-switcheroo`](https://github.com/alltechdev/mtk-imei-switcheroo). All the hard parts come from there; this app is just a UI wrapper.
 - [bkerler/mtkclient](https://github.com/bkerler/mtkclient) — MTK NVRAM AES key derivation algorithm.
 - [MTK MOLY modem source](https://github.com/hyperion70/HSPA_MOLY.WR8.W1449.MD.WG.MP.V16) — `LD0B_001` structure.

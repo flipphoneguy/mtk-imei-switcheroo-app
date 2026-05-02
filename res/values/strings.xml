@@ -41,7 +41,7 @@
     <string name="err_decrypt_failed">Could not decrypt the IMEI block.</string>
     <string name="ok_updated">IMEI updated.</string>
 
-    <string name="info_blurb">Reads and writes the IMEI in the DuoQin F21 Pro\'s NVRAM. Requires root.</string>
+    <string name="info_blurb">Reads and writes IMEI(s) in MediaTek MT67xx NVRAM. Tested on DuoQin F21 Pro, F25, and TIQ M5. Requires root.</string>
     <string name="info_author">by flipphoneguy</string>
     <string name="info_credit">Original Python tool and reverse-engineering by alltechdev.</string>
 
@@ -51,7 +51,7 @@
     <string name="info_orig_repo_label">Original Repository</string>
 
     <string name="info_github_url">https://github.com/flipphoneguy</string>
-    <string name="info_repo_url">https://github.com/flipphoneguy/f21-imei-switcheroo-app</string>
+    <string name="info_repo_url">https://github.com/flipphoneguy/mtk-imei-switcheroo-app</string>
     <string name="info_orig_author_url">https://github.com/alltechdev</string>
-    <string name="info_orig_repo_url">https://github.com/alltechdev/f21-imei-switcheroo</string>
+    <string name="info_orig_repo_url">https://github.com/alltechdev/mtk-imei-switcheroo</string>
 </resources>

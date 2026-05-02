@@ -50,6 +50,14 @@ public final class ImeiCrypto {
         byte[] block = new byte[IMEI_BLOCK_SIZE];
         System.arraycopy(ld0b, offset, block, 0, IMEI_BLOCK_SIZE);
         byte[] pt = aesDecrypt(block);
+        // The modem itself validates the MD5-XOR checksum at pt[10:18] over pt[0:10].
+        // If that doesn't match, the modem treats the slot as unprovisioned —
+        // so do the same here. Catches all-FF, all-00, and any other garbage
+        // that happens to BCD-decode as 15 digits.
+        byte[] expected = md5XorChecksum(pt, 0, 10);
+        for (int i = 0; i < 8; i++) {
+            if (pt[10 + i] != expected[i]) return null;
+        }
         return bcdToImei(pt, 0);
     }
 
