@@ -39,6 +39,27 @@ public final class ImeiHistory {
         save(ctx, list);
     }
 
+    /**
+     * Seed the history with the device's current IMEIs if it's empty. Lets
+     * users recover IMEIs that were in place before the app was ever opened.
+     * Returns true if any entries were written.
+     */
+    public static boolean seedIfEmpty(Context ctx, String[] currentImeis) {
+        if (currentImeis == null) return false;
+        if (!load(ctx).isEmpty()) return false;
+        List<String> seed = new ArrayList<>();
+        for (String imei : currentImeis) {
+            if (imei == null) continue;
+            if (!ImeiCrypto.isValidImei(imei)) continue;
+            if (seed.contains(imei)) continue;
+            seed.add(imei);
+            if (seed.size() >= MAX) break;
+        }
+        if (seed.isEmpty()) return false;
+        save(ctx, seed);
+        return true;
+    }
+
     private static void save(Context ctx, List<String> list) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {

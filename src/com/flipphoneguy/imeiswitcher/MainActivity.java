@@ -124,6 +124,8 @@ public class MainActivity extends Activity {
             return;
         }
 
+        if (ImeiHistory.seedIfEmpty(this, imeis)) renderHistory();
+
         // Count populated slots so we know whether to label them "IMEI" or "IMEI 1/2"
         int populated = 0;
         for (String s : imeis) if (s != null) populated++;
