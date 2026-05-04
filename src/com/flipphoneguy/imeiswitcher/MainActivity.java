@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     private TextView loading;
     private LinearLayout slotsContainer;
     private Button btnChange;
+    private Button btnGenerate;
     private LinearLayout historyList;
     private TextView emptyHistory;
 
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
         loading        = findViewById(R.id.loading_text);
         slotsContainer = findViewById(R.id.slots_container);
         btnChange      = findViewById(R.id.btn_change);
+        btnGenerate    = findViewById(R.id.btn_generate);
         historyList    = findViewById(R.id.history_list);
         emptyHistory   = findViewById(R.id.empty_history);
 
@@ -65,6 +67,10 @@ public class MainActivity extends Activity {
 
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { confirmChange(); }
+        });
+
+        btnGenerate.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showGeneratePicker(); }
         });
     }
 
@@ -80,6 +86,7 @@ public class MainActivity extends Activity {
         slotsContainer.removeAllViews();
         slots.clear();
         btnChange.setEnabled(false);
+        btnGenerate.setEnabled(false);
 
         new Thread(new Runnable() {
             @Override public void run() {
@@ -157,6 +164,7 @@ public class MainActivity extends Activity {
         }
 
         loading.setVisibility(View.GONE);
+        btnGenerate.setEnabled(!slots.isEmpty());
         updateChangeButtonState();
     }
 
@@ -305,13 +313,13 @@ public class MainActivity extends Activity {
             View row = inflater.inflate(R.layout.item_history, historyList, false);
             ((TextView) row.findViewById(R.id.history_imei)).setText(imei);
             row.findViewById(R.id.history_use).setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { useHistoryImei(imei); }
+                @Override public void onClick(View v) { applyImeiToSlot(imei); }
             });
             historyList.addView(row);
         }
     }
 
-    private void useHistoryImei(final String imei) {
+    private void applyImeiToSlot(final String imei) {
         if (slots.isEmpty()) return;
         if (slots.size() == 1) {
             fillSlot(slots.get(0), imei);
@@ -329,6 +337,48 @@ public class MainActivity extends Activity {
                     fillSlot(slots.get(which), imei);
                 }
             })
+            .show();
+    }
+
+    private void showGeneratePicker() {
+        if (slots.isEmpty()) return;
+        final TacCatalog.Entry[] entries = TacCatalog.ENTRIES;
+        final String[] labels = new String[entries.length];
+        for (int i = 0; i < entries.length; i++) labels[i] = entries[i].label();
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.generate_title)
+            .setItems(labels, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    showGeneratePreview(entries[which]);
+                }
+            })
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show();
+    }
+
+    private void showGeneratePreview(final TacCatalog.Entry entry) {
+        final ImeiGenerator.Result r = ImeiGenerator.generate(entry.prefixes);
+        String msg = getString(R.string.generate_preview_fmt,
+            entry.displayName,
+            r.imei,
+            r.prefixUsed,
+            ImeiGenerator.regionForImei(r.imei));
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.generate_preview_title)
+            .setMessage(msg)
+            .setPositiveButton(R.string.btn_use, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int w) {
+                    applyImeiToSlot(r.imei);
+                }
+            })
+            .setNeutralButton(R.string.btn_regenerate, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int w) {
+                    showGeneratePreview(entry);
+                }
+            })
+            .setNegativeButton(R.string.btn_cancel, null)
             .show();
     }
 

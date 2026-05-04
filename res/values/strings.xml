@@ -11,6 +11,12 @@
     <string name="btn_later">Later</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_use">Use</string>
+    <string name="btn_generate">Generate IMEI</string>
+    <string name="btn_regenerate">🎲 Regenerate</string>
+
+    <string name="generate_title">Pick a device template</string>
+    <string name="generate_preview_title">Generated IMEI</string>
+    <string name="generate_preview_fmt">%1$s\n\nIMEI: %2$s\nPrefix: %3$s\nRegion: %4$s</string>
 
     <string name="label_current_imei">Current IMEI</string>
     <string name="label_imei_n">IMEI %1$d</string>
@@ -42,6 +48,7 @@
     <string name="ok_updated">IMEI updated.</string>
 
     <string name="info_blurb">Reads and writes IMEI(s) in MediaTek MT67xx NVRAM. Tested on DuoQin F21 Pro, F25, and TIQ M5. Requires root.</string>
+    <string name="info_disclaimer">⚠ Modifying an IMEI is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.</string>
     <string name="info_author">by flipphoneguy</string>
     <string name="info_credit">Original Python tool and reverse-engineering by alltechdev.</string>
 
