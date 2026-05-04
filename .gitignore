@@ -1,4 +1,5 @@
 build/
 tmp/
+test/
 *.apk
 *.idsig

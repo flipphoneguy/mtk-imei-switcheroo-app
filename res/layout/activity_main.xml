@@ -49,66 +49,331 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
-            <!-- Loading placeholder, swapped for dynamically inflated slot rows -->
-            <TextView
-                android:id="@+id/loading_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/loading"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:padding="12dp" />
-
+            <!-- ─── IMEI section ─── -->
             <LinearLayout
-                android:id="@+id/slots_container"
+                android:id="@+id/card_imei"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="14dp">
 
-            <Button
-                android:id="@+id/btn_change"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="@string/btn_change"
-                style="@style/BtnPrimary"
-                android:enabled="false"
-                android:layout_marginBottom="10dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_imei"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
 
-            <Button
-                android:id="@+id/btn_generate"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:text="@string/btn_generate"
-                style="@style/BtnOutline"
-                android:enabled="false"
-                android:layout_marginBottom="24dp" />
+                <TextView
+                    android:id="@+id/imei_loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_imei"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:padding="8dp" />
 
-            <!-- History -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_history"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:layout_marginBottom="6dp" />
+                <LinearLayout
+                    android:id="@+id/imei_slots_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
-            <TextView
-                android:id="@+id/empty_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_history"
-                android:textColor="@color/text_hint"
-                android:textSize="13sp"
-                android:padding="12dp"
-                android:visibility="gone" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
 
+                    <Button
+                        android:id="@+id/btn_change_imei"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_apply_imei"
+                        style="@style/BtnPrimary"
+                        android:enabled="false"
+                        android:layout_marginEnd="6dp" />
+
+                    <Button
+                        android:id="@+id/btn_generate_imei"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_generate_imei"
+                        style="@style/BtnOutline"
+                        android:enabled="false" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_history_imei"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/imei_history_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_history_imei"
+                    android:textColor="@color/text_hint"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/imei_history_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- ─── BT MAC section ─── -->
             <LinearLayout
-                android:id="@+id/history_list"
+                android:id="@+id/card_bt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_bt"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/bt_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_bt"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:padding="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/bt_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_current"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/bt_current"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/bg_summary"
+                        android:padding="14dp"
+                        android:textColor="@color/text_primary"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFamily="monospace"
+                        android:textIsSelectable="true"
+                        android:layout_marginBottom="8dp" />
+
+                    <EditText
+                        android:id="@+id/bt_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/EditField"
+                        android:hint="@string/hint_mac"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
+                        android:digits="0123456789abcdefABCDEF:-"
+                        android:maxLength="17"
+                        android:fontFamily="monospace" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <Button
+                            android:id="@+id/btn_change_bt"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="@string/btn_apply_bt"
+                            style="@style/BtnPrimary"
+                            android:enabled="false"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btn_randomize_bt"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="@string/btn_randomize"
+                            style="@style/BtnOutline" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_history_bt"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/bt_history_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/empty_history_mac"
+                        android:textColor="@color/text_hint"
+                        android:textSize="12sp"
+                        android:padding="8dp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/bt_history_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ─── WiFi MAC section ─── -->
+            <LinearLayout
+                android:id="@+id/card_wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_wifi"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/wifi_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_wifi"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:padding="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/wifi_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_current"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/wifi_current"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/bg_summary"
+                        android:padding="14dp"
+                        android:textColor="@color/text_primary"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFamily="monospace"
+                        android:textIsSelectable="true"
+                        android:layout_marginBottom="8dp" />
+
+                    <EditText
+                        android:id="@+id/wifi_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/EditField"
+                        android:hint="@string/hint_mac"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
+                        android:digits="0123456789abcdefABCDEF:-"
+                        android:maxLength="17"
+                        android:fontFamily="monospace" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <Button
+                            android:id="@+id/btn_change_wifi"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="@string/btn_apply_wifi"
+                            style="@style/BtnPrimary"
+                            android:enabled="false"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btn_randomize_wifi"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="@string/btn_randomize"
+                            style="@style/BtnOutline" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_history_wifi"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/wifi_history_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/empty_history_mac"
+                        android:textColor="@color/text_hint"
+                        android:textSize="12sp"
+                        android:padding="8dp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/wifi_history_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

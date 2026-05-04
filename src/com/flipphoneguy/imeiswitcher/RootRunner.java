@@ -14,6 +14,10 @@ public final class RootRunner {
 
     public static final String IMEI_PATH =
         "/mnt/vendor/nvdata/md/NVRAM/NVD_IMEI/LD0B_001";
+    public static final String BT_PATH =
+        "/mnt/vendor/nvdata/APCFG/APRDEB/BT_Addr";
+    public static final String WIFI_PATH =
+        "/mnt/vendor/nvdata/APCFG/APRDEB/WIFI";
 
     private RootRunner() {}
 
@@ -51,15 +55,23 @@ public final class RootRunner {
      */
     public static void replaceImeiFile(byte[] patched, String stagingPath)
             throws IOException, InterruptedException {
-        // Caller writes the staging file before calling us.
+        replaceFile(stagingPath, IMEI_PATH, "system");
+    }
+
+    /**
+     * Generic NVRAM file replace used by IMEI / BT_Addr / WIFI flows. Group
+     * differs per file: IMEI/WIFI are root:system, BT_Addr is root:bluetooth.
+     */
+    public static void replaceFile(String stagingPath, String dest, String group)
+            throws IOException, InterruptedException {
         run("mount -o remount,rw /mnt/vendor/nvdata");
         run("mount -o remount,rw /");
-        Result cp = run("cp " + stagingPath + " " + IMEI_PATH);
+        Result cp = run("cp " + stagingPath + " " + dest);
         if (cp.exit != 0) {
             throw new IOException("cp failed: " + cp.stderr);
         }
-        run("chmod 660 " + IMEI_PATH);
-        run("chown root:system " + IMEI_PATH);
+        run("chmod 660 " + dest);
+        run("chown root:" + group + " " + dest);
     }
 
     public static void reboot() {

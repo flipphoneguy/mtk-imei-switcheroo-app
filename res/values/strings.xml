@@ -1,56 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">IMEI Switcheroo</string>
+    <string name="app_name">MTK Switcheroo</string>
 
     <string name="info_title">About</string>
 
+    <!-- Buttons -->
     <string name="btn_about">About</string>
     <string name="btn_back">←</string>
-    <string name="btn_change">Change IMEI</string>
+    <string name="btn_apply_imei">Apply IMEI</string>
+    <string name="btn_apply_bt">Apply BT</string>
+    <string name="btn_apply_wifi">Apply WiFi</string>
+    <string name="btn_change">Apply</string>
     <string name="btn_reboot">Reboot now</string>
     <string name="btn_later">Later</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_use">Use</string>
-    <string name="btn_generate">Generate IMEI</string>
+    <string name="btn_generate_imei">Generate</string>
     <string name="btn_regenerate">🎲 Regenerate</string>
+    <string name="btn_randomize">🎲 Randomize</string>
 
+    <!-- Sections -->
+    <string name="section_imei">IMEI</string>
+    <string name="section_bt">Bluetooth MAC</string>
+    <string name="section_wifi">WiFi MAC</string>
+
+    <!-- Common labels -->
+    <string name="label_current">Current</string>
+    <string name="label_current_imei">Current IMEI</string>
+    <string name="label_imei_n">IMEI %1$d</string>
+    <string name="label_history_imei">Recent IMEIs</string>
+    <string name="label_history_bt">Recent BT MACs</string>
+    <string name="label_history_wifi">Recent WiFi MACs</string>
+    <string name="hint_keep">leave blank to keep current</string>
+    <string name="hint_mac">aa:bb:cc:dd:ee:ff</string>
+    <string name="apply_to_slot_title">Apply to which IMEI?</string>
+    <string name="slot_n">IMEI %1$d</string>
+
+    <!-- Empty states -->
+    <string name="empty_history_imei">No previous IMEIs yet.</string>
+    <string name="empty_history_mac">No previous values yet.</string>
+    <string name="empty_imei">(empty)</string>
+    <string name="loading_imei">Reading IMEI…</string>
+    <string name="loading_bt">Reading Bluetooth MAC…</string>
+    <string name="loading_wifi">Reading WiFi MAC…</string>
+
+    <!-- Generate IMEI flow -->
     <string name="generate_title">Pick a device template</string>
     <string name="generate_preview_title">Generated IMEI</string>
     <string name="generate_preview_fmt">%1$s\n\nIMEI: %2$s\nPrefix: %3$s\nRegion: %4$s</string>
 
-    <string name="label_current_imei">Current IMEI</string>
-    <string name="label_imei_n">IMEI %1$d</string>
-    <string name="label_new_imei">New IMEI</string>
-    <string name="label_new_imei_n">New IMEI %1$d</string>
-    <string name="label_history">Recent IMEIs</string>
-    <string name="hint_keep">leave blank to keep current</string>
-    <string name="apply_to_slot_title">Apply to which IMEI?</string>
-    <string name="slot_n">IMEI %1$d</string>
-    <string name="err_no_changes">Enter at least one new IMEI.</string>
-
-    <string name="hint_new_imei">15 digits</string>
-    <string name="empty_history">No previous IMEIs yet.</string>
-    <string name="empty_imei">(empty)</string>
-    <string name="loading">Reading current IMEI…</string>
-
-    <string name="confirm_change_title">Change IMEI?</string>
-    <string name="confirm_change_msg">The new IMEI will be written to NVRAM. A reboot is required for it to take effect.</string>
+    <!-- Confirmation dialogs -->
+    <string name="confirm_change_title">Apply changes?</string>
+    <string name="confirm_change_msg">The new value will be written to NVRAM. A reboot is required for it to take effect.</string>
 
     <string name="reboot_title">Reboot now?</string>
-    <string name="reboot_msg">The new IMEI is in NVRAM but the modem still has the old value cached until reboot.</string>
+    <string name="reboot_msg">The change is in NVRAM but the modem / BT / WiFi stack still has the old value cached until reboot.</string>
 
+    <!-- Success -->
+    <string name="ok_updated_imei">IMEI updated.</string>
+    <string name="ok_updated_bt">BT MAC updated.</string>
+    <string name="ok_updated_wifi">WiFi MAC updated.</string>
+
+    <!-- Errors — IMEI -->
+    <string name="err_no_changes">Enter at least one new value.</string>
     <string name="err_invalid_imei">IMEI must be exactly 15 digits.</string>
     <string name="err_no_root">Root access denied. Grant this app root in Magisk → Superuser.</string>
-    <string name="err_read_failed">Could not read LD0B_001 from device.</string>
-    <string name="err_pull_size">LD0B_001 is the wrong size — pull may have corrupted the file.</string>
+    <string name="err_read_failed">Could not read NVRAM file.</string>
+    <string name="err_pull_size">NVRAM file is the wrong size — pull may have corrupted it.</string>
     <string name="err_write_failed">Could not write the patched file back.</string>
     <string name="err_decrypt_failed">Could not decrypt the IMEI block.</string>
-    <string name="ok_updated">IMEI updated.</string>
 
-    <string name="info_blurb">Reads and writes IMEI(s) in MediaTek MT67xx NVRAM. Tested on DuoQin F21 Pro, F25, and TIQ M5. Requires root.</string>
-    <string name="info_disclaimer">⚠ Modifying an IMEI is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.</string>
+    <!-- Errors — MAC -->
+    <string name="err_invalid_mac">MAC must be six hex bytes (e.g. 02:11:22:33:44:55).</string>
+    <string name="err_bt_unsupported">BT MAC: this device\'s NVRAM checksum does not match the algorithm this app supports. Editing is disabled to avoid bricking Bluetooth.</string>
+    <string name="err_wifi_unsupported">WiFi MAC: this device\'s NVRAM checksum does not match the algorithm this app supports. Editing is disabled to avoid bricking WiFi.</string>
+    <string name="err_bt_missing">BT_Addr file not found at /mnt/vendor/nvdata/APCFG/APRDEB/BT_Addr.</string>
+    <string name="err_wifi_missing">WIFI file not found at /mnt/vendor/nvdata/APCFG/APRDEB/WIFI.</string>
+
+    <!-- About / Info -->
+    <string name="info_blurb">Reads and writes IMEI, Bluetooth MAC, and WiFi MAC in MediaTek MT67xx NVRAM. Tested on DuoQin F21 Pro, F25, Lom S9, and TIQ M5. Requires root.</string>
+    <string name="info_disclaimer">⚠ Modifying an IMEI, Bluetooth, or WiFi MAC is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.</string>
     <string name="info_author">by flipphoneguy</string>
-    <string name="info_credit">Original Python tool and reverse-engineering by alltechdev.</string>
+    <string name="info_credit">Original Python tools and reverse-engineering by alltechdev.</string>
 
     <string name="info_github_label">My GitHub</string>
     <string name="info_repo_label">App Repository</string>
