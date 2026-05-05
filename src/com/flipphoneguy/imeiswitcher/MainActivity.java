@@ -600,6 +600,9 @@ public class MainActivity extends Activity {
 
             RootRunner.replaceFile(staging.getAbsolutePath(), pathOf(k), groupOf(k));
             staging.delete();
+            if (k == MacKind.WIFI) {
+                RootRunner.syncAndroidWifiFactoryMac(MacCrypto.formatMac(newMac));
+            }
             return null;
         } catch (Exception e) {
             String msg = e.getMessage();

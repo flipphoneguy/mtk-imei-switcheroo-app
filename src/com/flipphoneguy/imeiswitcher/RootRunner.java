@@ -80,6 +80,31 @@ public final class RootRunner {
         } catch (Exception ignored) {}
     }
 
+    public static final String WIFI_CONFIG_STORE =
+        "/data/misc/apexdata/com.android.wifi/WifiConfigStore.xml";
+
+    /**
+     * Best-effort sync of Android's cached factory WiFi MAC. The radio uses
+     * the NVRAM MAC, but Android's WifiService caches the factory MAC the
+     * first time it sees it and seeds per-SSID MAC randomization from that
+     * cache — leaving it stale means joined networks still derive the same
+     * randomized MAC they did before. Patches the one tag in-place if the
+     * file exists and matches the expected format; silently skips otherwise.
+     * Reboot recommended (which is already part of the apply flow).
+     */
+    public static void syncAndroidWifiFactoryMac(String newMacLower) {
+        try {
+            String tag = "wifi_sta_factory_mac_address";
+            String cmd =
+                "F=" + WIFI_CONFIG_STORE + "; " +
+                "[ -f \"$F\" ] && " +
+                "grep -qE '<string name=\"" + tag + "\">[0-9a-fA-F:]{17}</string>' \"$F\" && " +
+                "sed -i -E 's|<string name=\"" + tag + "\">[^<]*</string>|" +
+                "<string name=\"" + tag + "\">" + newMacLower + "</string>|' \"$F\"";
+            run(cmd);
+        } catch (Exception ignored) {}
+    }
+
     public static Result run(String cmd) throws IOException, InterruptedException {
         Process p = Runtime.getRuntime().exec(new String[]{"su", "-c", cmd});
         p.getOutputStream().close();
