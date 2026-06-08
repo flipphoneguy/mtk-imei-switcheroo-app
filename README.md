@@ -1,5 +1,11 @@
 # mtk-imei-switcheroo-app
 
+<div align="center">
+
+![Downloads](https://img.shields.io/github/downloads/flipphoneguy/mtk-imei-switcheroo-app/total)
+
+</div>
+
 Android app that reads and rewrites the **IMEI**, **Bluetooth MAC**, and **WiFi MAC** in NVRAM on rooted MediaTek MT67xx phones — tested on **DuoQin F21 Pro** (single-SIM), **DuoQin F25** (dual-SIM), **Lom S9**, and **TIQ M5** (dual-SIM, MT6761). Wraps the IMEI crypto from [`alltechdev/mtk-imei-switcheroo`](https://github.com/alltechdev/mtk-imei-switcheroo) and the BT/WiFi work from [`alltechdev/f21-imei-switcheroo`](https://github.com/alltechdev/f21-imei-switcheroo) in a single APK so you don't need a host PC, ADB, Termux, or Python.
 
 Three cards in one screen:
