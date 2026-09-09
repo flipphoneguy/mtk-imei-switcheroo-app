@@ -84,11 +84,11 @@
     <string name="btn_replace">Replace</string>
     <string name="backup_none">No backup yet. Save the current IMEI, Bluetooth MAC and WiFi MAC so you can restore them later.</string>
     <string name="backup_exists">Backed up %1$s</string>
-    <string name="backup_note">Kept inside the app like the history lists — survives reboots and app updates, but not uninstalling the app or clearing its data.</string>
+    <string name="backup_note">Kept inside the app like the history lists.</string>
     <string name="backup_replace_title">Replace backup?</string>
     <string name="backup_replace_msg">The backup from %1$s will be replaced with the values currently in NVRAM:</string>
     <string name="restore_confirm_title">Restore backup?</string>
-    <string name="restore_confirm_msg">These values will be written to NVRAM the same way Apply does. A reboot is required for them to take effect.</string>
+    <string name="restore_confirm_msg">These values will be written the same way Apply does. A reboot is required for them to take effect.</string>
     <string name="ok_backup">Backup saved.</string>
     <string name="ok_restored">Backup restored.</string>
     <string name="err_backup_nothing">Nothing to back up — no value could be read.</string>
