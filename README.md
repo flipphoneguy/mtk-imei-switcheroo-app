@@ -79,7 +79,7 @@ Each section remembers the last 5 values you've applied (most-recent first, dedu
 
 ## Backup / Restore
 
-The **Backup** card at the bottom stores a snapshot of the current IMEI(s), BT MAC, and WiFi MAC inside the app (`SharedPreferences`, key `value_backup`) — the same place the history lists live, so there's no exported file to lose. It survives reboots and app updates, and goes away only if the app is uninstalled or its data is cleared.
+The **Backup** card at the bottom stores a snapshot of the current IMEI(s), BT MAC, and WiFi MAC inside the app (`SharedPreferences`, key `value_backup`) — the same place the history lists live.
 
 **Back up now** reads the values straight from NVRAM with the same checks the cards use (a MAC section that fails the supported-device gate is left out, since the app couldn't restore it anyway). One backup is kept; taking another asks before replacing it. **Restore** shows the backed-up values, then writes each one through the same patch path as **Apply** — the on-device file is re-read and only the value bytes and checksum change — records them in the history, and offers a reboot. Values that fail are reported individually; the rest still land.
 
