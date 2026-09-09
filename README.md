@@ -77,6 +77,12 @@ Catalog and generator live in [`TacCatalog.java`](src/com/flipphoneguy/imeiswitc
 
 Each section remembers the last 5 values you've applied (most-recent first, deduplicated) in `SharedPreferences`. Tap **Use** to refill the input field and switch back. On dual-SIM units, IMEI **Use** asks which slot to drop the value into. Storage key per kind: `imei_history`, `bt_mac_history`, `wifi_mac_history`.
 
+## Backup / Restore
+
+The **Backup** card at the bottom stores a snapshot of the current IMEI(s), BT MAC, and WiFi MAC inside the app (`SharedPreferences`, key `value_backup`) — the same place the history lists live, so there's no exported file to lose. It survives reboots and app updates, and goes away only if the app is uninstalled or its data is cleared.
+
+**Back up now** reads the values straight from NVRAM with the same checks the cards use (a MAC section that fails the supported-device gate is left out, since the app couldn't restore it anyway). One backup is kept; taking another asks before replacing it. **Restore** shows the backed-up values, then writes each one through the same patch path as **Apply** — the on-device file is re-read and only the value bytes and checksum change — records them in the history, and offers a reboot. Values that fail are reported individually; the rest still land.
+
 > ⚠ Modifying an IMEI, Bluetooth, or WiFi MAC is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.
 
 ## Credits

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,9 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -49,6 +52,10 @@ public class MainActivity extends Activity {
     private LinearLayout wifiHistoryList;
     private TextView wifiHistoryEmpty;
     private byte[] wifiCurrentMac;
+
+    // Backup section
+    private TextView backupStatus, backupSummary;
+    private Button btnBackup, btnRestore;
 
     private final Handler ui = new Handler(Looper.getMainLooper());
     private boolean rebootPromptOpen = false;
@@ -97,6 +104,12 @@ public class MainActivity extends Activity {
         wifiHistoryList  = findViewById(R.id.wifi_history_list);
         wifiHistoryEmpty = findViewById(R.id.wifi_history_empty);
 
+        // Backup bindings
+        backupStatus  = findViewById(R.id.backup_status);
+        backupSummary = findViewById(R.id.backup_summary);
+        btnBackup     = findViewById(R.id.btn_backup);
+        btnRestore    = findViewById(R.id.btn_restore);
+
         findViewById(R.id.btn_about).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, InfoActivity.class));
@@ -125,6 +138,13 @@ public class MainActivity extends Activity {
             @Override public void onClick(View v) { randomize(MacKind.WIFI); }
         });
         wifiInput.addTextChangedListener(macInputWatcher(MacKind.WIFI));
+
+        btnBackup.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { confirmBackup(); }
+        });
+        btnRestore.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { confirmRestore(); }
+        });
     }
 
     @Override
@@ -133,6 +153,7 @@ public class MainActivity extends Activity {
         loadImei();
         loadMac(MacKind.BT);
         loadMac(MacKind.WIFI);
+        renderBackup();
     }
 
     // ─── IMEI section ──────────────────────────────────────────────────────
@@ -633,6 +654,173 @@ public class MainActivity extends Activity {
             });
             list.addView(row);
         }
+    }
+
+    // ─── Backup / restore ──────────────────────────────────────────────────
+
+    private void renderBackup() {
+        ValueBackup.Snapshot s = ValueBackup.load(this);
+        if (s == null || s.isEmpty()) {
+            backupStatus.setText(R.string.backup_none);
+            backupSummary.setVisibility(View.GONE);
+            btnRestore.setEnabled(false);
+            return;
+        }
+        backupStatus.setText(getString(R.string.backup_exists, formatTime(s.time)));
+        backupSummary.setText(describe(s));
+        backupSummary.setVisibility(View.VISIBLE);
+        btnRestore.setEnabled(true);
+    }
+
+    private String formatTime(long millis) {
+        return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+            .format(new Date(millis));
+    }
+
+    /** One "label: value" line per backed-up value; shown in the card and the confirm dialogs. */
+    private String describe(ValueBackup.Snapshot s) {
+        StringBuilder sb = new StringBuilder();
+        int populated = 0;
+        for (String v : s.imeis) if (v != null) populated++;
+        for (int i = 0; i < s.imeis.length; i++) {
+            if (s.imeis[i] == null) continue;
+            String label = populated > 1
+                ? getString(R.string.label_imei_n, i + 1)
+                : getString(R.string.section_imei);
+            appendLine(sb, label, s.imeis[i]);
+        }
+        if (s.btMac != null) appendLine(sb, getString(R.string.section_bt), s.btMac.toUpperCase());
+        if (s.wifiMac != null) appendLine(sb, getString(R.string.section_wifi), s.wifiMac.toUpperCase());
+        return sb.toString();
+    }
+
+    private static void appendLine(StringBuilder sb, String label, String value) {
+        if (sb.length() > 0) sb.append('\n');
+        sb.append(label).append(": ").append(value);
+    }
+
+    private void confirmBackup() {
+        final ValueBackup.Snapshot existing = ValueBackup.load(this);
+        if (existing == null || existing.isEmpty()) {
+            runBackup();
+            return;
+        }
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.backup_replace_title)
+            .setMessage(getString(R.string.backup_replace_msg, formatTime(existing.time))
+                + "\n\n" + describe(existing))
+            .setPositiveButton(R.string.btn_replace, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int w) { runBackup(); }
+            })
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show();
+    }
+
+    /** Reads the current values off the device (same checks as the cards) and stores them. */
+    private void runBackup() {
+        btnBackup.setEnabled(false);
+        btnRestore.setEnabled(false);
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final ValueBackup.Snapshot s = ValueBackup.readCurrent();
+                if (s != null && !s.isEmpty()) ValueBackup.save(MainActivity.this, s);
+                ui.post(new Runnable() {
+                    @Override public void run() {
+                        btnBackup.setEnabled(true);
+                        renderBackup();
+                        if (s == null) {
+                            Toast.makeText(MainActivity.this, R.string.err_no_root, Toast.LENGTH_LONG).show();
+                        } else if (s.isEmpty()) {
+                            Toast.makeText(MainActivity.this, R.string.err_backup_nothing, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.ok_backup, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void confirmRestore() {
+        final ValueBackup.Snapshot s = ValueBackup.load(this);
+        if (s == null || s.isEmpty()) return;
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.restore_confirm_title)
+            .setMessage(getString(R.string.restore_confirm_msg) + "\n\n" + describe(s))
+            .setPositiveButton(R.string.btn_restore, new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int w) { runRestore(s); }
+            })
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show();
+    }
+
+    /**
+     * Writes every value in the backup through the same patch path Apply uses
+     * (doImeiPatch / doMacPatch): the on-device files are re-read and only the
+     * value bytes + checksum change, with the same supported-device gates.
+     * Values that fail are reported; the rest still land.
+     */
+    private void runRestore(final ValueBackup.Snapshot s) {
+        btnBackup.setEnabled(false);
+        btnRestore.setEnabled(false);
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final List<String> errors = new ArrayList<>();
+                final List<ImeiChange> imeiChanges = new ArrayList<>();
+                boolean imeiOk = false, btOk = false, wifiOk = false;
+
+                if (!RootRunner.hasRoot()) {
+                    errors.add(getString(R.string.err_no_root));
+                } else {
+                    for (int i = 0; i < s.imeis.length; i++) {
+                        if (s.imeis[i] != null) imeiChanges.add(new ImeiChange(i, s.imeis[i]));
+                    }
+                    if (!imeiChanges.isEmpty()) {
+                        String e = doImeiPatch(imeiChanges);
+                        if (e == null) imeiOk = true;
+                        else errors.add(getString(R.string.section_imei) + ": " + e);
+                    }
+                    if (s.btMac != null) {
+                        String e = doMacPatch(MacKind.BT, MacCrypto.parseMac(s.btMac));
+                        if (e == null) btOk = true;
+                        else errors.add(getString(R.string.section_bt) + ": " + e);
+                    }
+                    if (s.wifiMac != null) {
+                        String e = doMacPatch(MacKind.WIFI, MacCrypto.parseMac(s.wifiMac));
+                        if (e == null) wifiOk = true;
+                        else errors.add(getString(R.string.section_wifi) + ": " + e);
+                    }
+                }
+
+                final boolean restoredImei = imeiOk, restoredBt = btOk, restoredWifi = wifiOk;
+                ui.post(new Runnable() {
+                    @Override public void run() {
+                        btnBackup.setEnabled(true);
+                        btnRestore.setEnabled(true);
+                        if (restoredImei) {
+                            for (ImeiChange c : imeiChanges) ImeiHistory.add(MainActivity.this, c.imei);
+                        }
+                        if (restoredBt) MacHistory.add(MainActivity.this, MacHistory.Kind.BT, s.btMac);
+                        if (restoredWifi) MacHistory.add(MainActivity.this, MacHistory.Kind.WIFI, s.wifiMac);
+
+                        boolean any = restoredImei || restoredBt || restoredWifi;
+                        if (errors.isEmpty()) {
+                            Toast.makeText(MainActivity.this, R.string.ok_restored, Toast.LENGTH_SHORT).show();
+                        } else {
+                            String head = getString(any ? R.string.err_restore_partial : R.string.err_restore_failed);
+                            Toast.makeText(MainActivity.this,
+                                head + "\n" + TextUtils.join("\n", errors), Toast.LENGTH_LONG).show();
+                        }
+                        if (any) {
+                            loadImei();
+                            loadMac(MacKind.BT);
+                            loadMac(MacKind.WIFI);
+                            promptReboot();
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     // ─── Reboot ────────────────────────────────────────────────────────────

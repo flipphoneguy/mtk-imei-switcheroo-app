@@ -77,6 +77,24 @@
     <string name="err_bt_missing">BT_Addr file not found at /mnt/vendor/nvdata/APCFG/APRDEB/BT_Addr.</string>
     <string name="err_wifi_missing">WIFI file not found at /mnt/vendor/nvdata/APCFG/APRDEB/WIFI.</string>
 
+    <!-- Backup / restore -->
+    <string name="section_backup">Backup</string>
+    <string name="btn_backup">Back up now</string>
+    <string name="btn_restore">Restore</string>
+    <string name="btn_replace">Replace</string>
+    <string name="backup_none">No backup yet. Save the current IMEI, Bluetooth MAC and WiFi MAC so you can restore them later.</string>
+    <string name="backup_exists">Backed up %1$s</string>
+    <string name="backup_note">Kept inside the app like the history lists — survives reboots and app updates, but not uninstalling the app or clearing its data.</string>
+    <string name="backup_replace_title">Replace backup?</string>
+    <string name="backup_replace_msg">The backup from %1$s will be replaced with the values currently in NVRAM:</string>
+    <string name="restore_confirm_title">Restore backup?</string>
+    <string name="restore_confirm_msg">These values will be written to NVRAM the same way Apply does. A reboot is required for them to take effect.</string>
+    <string name="ok_backup">Backup saved.</string>
+    <string name="ok_restored">Backup restored.</string>
+    <string name="err_backup_nothing">Nothing to back up — no value could be read.</string>
+    <string name="err_restore_partial">Some values could not be restored:</string>
+    <string name="err_restore_failed">Restore failed:</string>
+
     <!-- About / Info -->
     <string name="info_blurb">Reads and writes IMEI, Bluetooth MAC, and WiFi MAC in MediaTek MT67xx NVRAM. Tested on DuoQin F21 Pro, F25, Lom S9, and TIQ M5. Requires root.</string>
     <string name="info_disclaimer">⚠ Modifying an IMEI, Bluetooth, or WiFi MAC is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.</string>
