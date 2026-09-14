@@ -28,7 +28,9 @@ Grab the APK from [Releases](../../releases) (or build it — see below) and ins
 ./build.sh
 ```
 
-Termux build environment with `aapt2`, `ecj`, `d8`, `apksigner`, `zip`, plus `~/.android/android.jar`, `~/.android/framework-res.apk`, and `~/.android/debug.keystore`. No external Java libs — AES-128-ECB and MD5 come from `javax.crypto` / `java.security`. Output: `ImeiSwitcheroo.apk`.
+Requires `aapt2`, `ecj`, `d8`, `apksigner`, `zip` (e.g. `pkg install aapt2 ecj d8 apksigner zip` in Termux), an `android.jar`, a `framework-res.apk`, and a debug keystore — paths in `build.sh`. No external Java libs — AES-128-ECB and MD5 come from `javax.crypto` / `java.security`. Output: `ImeiSwitcheroo.apk`.
+
+On a desktop Linux machine the same script works with an Android SDK (build-tools + a platform) and either a JDK or Android Studio's bundled JBR: it finds the SDK via `ANDROID_SDK_ROOT`, `ANDROID_HOME`, or `~/Android/Sdk`, uses the platform `android.jar` in place of both Termux jars, and falls back from `ecj` to `javac`. `ANDROID_JAR`, `FRAMEWORK_RES`, and `KEYSTORE` can be overridden in the environment.
 
 `VERSION` is the single source of truth for `versionName`/`versionCode`; `build.sh` syncs `AndroidManifest.xml` from it on every build.
 
@@ -71,6 +73,12 @@ Catalog and generator live in [`TacCatalog.java`](src/com/flipphoneguy/imeiswitc
 ## History
 
 Each section remembers the last 5 values you've applied (most-recent first, deduplicated) in `SharedPreferences`. Tap **Use** to refill the input field and switch back. On dual-SIM units, IMEI **Use** asks which slot to drop the value into. Storage key per kind: `imei_history`, `bt_mac_history`, `wifi_mac_history`.
+
+## Backup / Restore
+
+The **Backup** card at the bottom stores a snapshot of the current IMEI(s), BT MAC, and WiFi MAC inside the app (`SharedPreferences`, key `value_backup`) — the same place the history lists live.
+
+**Back up now** reads the values straight from NVRAM with the same checks the cards use (a MAC section that fails the supported-device gate is left out, since the app couldn't restore it anyway). One backup is kept; taking another asks before replacing it. **Restore** shows the backed-up values, then writes each one through the same patch path as **Apply** — the on-device file is re-read and only the value bytes and checksum change — records them in the history, and offers a reboot. Values that fail are reported individually; the rest still land.
 
 > ⚠ Modifying an IMEI, Bluetooth, or WiFi MAC is illegal in some jurisdictions. You are responsible for checking your local laws and using this tool accordingly.
 

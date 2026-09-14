@@ -1,16 +1,47 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 set -e
 
-ANDROID_JAR="${HOME}/.android/android.jar"
-FRAMEWORK_RES="${HOME}/.android/framework-res.apk"
+# Toolchain: Termux defaults, or auto-detected from an Android SDK. Override any via env.
+ANDROID_JAR="${ANDROID_JAR:-${HOME}/.android/android.jar}"
+FRAMEWORK_RES="${FRAMEWORK_RES:-${HOME}/.android/framework-res.apk}"
 
-KEYSTORE="${HOME}/.android/debug.keystore"
-KEYSTORE_ALIAS="androiddebugkey"
-KEYSTORE_PASS="android"
-KEY_PASS="android"
+KEYSTORE="${KEYSTORE:-${HOME}/.android/debug.keystore}"
+KEYSTORE_ALIAS="${KEYSTORE_ALIAS:-androiddebugkey}"
+KEYSTORE_PASS="${KEYSTORE_PASS:-android}"
+KEY_PASS="${KEY_PASS:-android}"
 
 APK_OUT="ImeiSwitcheroo.apk"
 BUILD_DIR="build"
+MIN_SDK=23
+TARGET_SDK=35
+
+# Desktop Android SDK: newest build-tools onto PATH, platform android.jar for both jars.
+SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-${HOME}/Android/Sdk}}"
+if [ -d "$SDK_ROOT" ]; then
+    BT_DIR="$(ls -d "$SDK_ROOT"/build-tools/*/ 2>/dev/null | sort -V | tail -1)"
+    [ -n "$BT_DIR" ] && export PATH="${BT_DIR%/}:$PATH"
+    PLATFORM_JAR="$SDK_ROOT/platforms/android-$TARGET_SDK/android.jar"
+    [ -f "$PLATFORM_JAR" ] || PLATFORM_JAR="$(ls "$SDK_ROOT"/platforms/android-*/android.jar 2>/dev/null | sort -V | tail -1)"
+    [ -f "$ANDROID_JAR" ]   || ANDROID_JAR="$PLATFORM_JAR"
+    [ -f "$FRAMEWORK_RES" ] || FRAMEWORK_RES="$ANDROID_JAR"
+fi
+
+# Java compiler: ecj (Termux), else javac from PATH / JAVA_HOME / Android Studio's JBR.
+JAVAC=""
+if command -v ecj >/dev/null; then JAVAC=ecj
+elif command -v javac >/dev/null; then JAVAC=javac
+elif [ -x "${JAVA_HOME:-/nonexistent}/bin/javac" ]; then JAVAC="$JAVA_HOME/bin/javac"
+else
+    for cand in /snap/android-studio/current/jbr/bin/javac /snap/android-studio/*/jbr/bin/javac \
+                /opt/android-studio/jbr/bin/javac \
+                "$HOME"/.local/share/JetBrains/Toolbox/apps/android-studio/jbr/bin/javac; do
+        [ -x "$cand" ] && { JAVAC="$cand"; break; }
+    done
+fi
+# d8/apksigner exec `java`, so put the chosen JDK on PATH.
+case "$JAVAC" in
+    */bin/javac) export JAVA_HOME="$(dirname "$(dirname "$JAVAC")")"; export PATH="$(dirname "$JAVAC"):$PATH" ;;
+esac
 
 # Read version from VERSION file (used for versionName)
 VERSION_FILE="VERSION"
@@ -25,15 +56,15 @@ VERSION_CODE=$(echo "$VERSION_NAME" | awk -F. '{ printf "%d%02d%02d", $1,$2,$3 }
 # ── Sanity checks ──────────────────────────────────────────────────────────
 fail() { echo "✗ $1"; [ -n "$2" ] && echo "  $2"; exit 1; }
 
-command -v aapt2     >/dev/null || fail "aapt2 not found"     "pkg install aapt2"
-command -v ecj       >/dev/null || fail "ecj not found"       "pkg install ecj"
-command -v d8        >/dev/null || fail "d8 not found"        "pkg install d8"
-command -v apksigner >/dev/null || fail "apksigner not found" "pkg install apksigner"
+command -v aapt2     >/dev/null || fail "aapt2 not found"     "pkg install aapt2, or install Android SDK build-tools"
+[ -n "$JAVAC" ]                 || fail "no Java compiler found" "pkg install ecj, or install a JDK / Android Studio"
+command -v d8        >/dev/null || fail "d8 not found"        "pkg install d8, or install Android SDK build-tools"
+command -v apksigner >/dev/null || fail "apksigner not found" "pkg install apksigner, or install Android SDK build-tools"
 command -v zip       >/dev/null || fail "zip not found"       "pkg install zip"
-[ -f "$ANDROID_JAR"   ] || fail "android.jar not found at: $ANDROID_JAR"
+[ -f "$ANDROID_JAR"   ] || fail "android.jar not found at: $ANDROID_JAR" "set ANDROID_JAR=..., or install an SDK platform"
 [ -f "$FRAMEWORK_RES" ] || fail \
     "framework-res.apk not found at: $FRAMEWORK_RES" \
-    "cp /system/framework/framework-res.apk ~/.android/"
+    "cp /system/framework/framework-res.apk ~/.android/ (Termux), or set FRAMEWORK_RES=..."
 [ -f "$KEYSTORE"      ] || fail "Keystore not found at: $KEYSTORE"
 
 echo "════════════════════════════════════"
@@ -64,8 +95,8 @@ aapt2 link \
     --manifest AndroidManifest.xml \
     -I "$FRAMEWORK_RES" \
     --java "$BUILD_DIR/gen" \
-    --min-sdk-version 23 \
-    --target-sdk-version 35 \
+    --min-sdk-version "$MIN_SDK" \
+    --target-sdk-version "$TARGET_SDK" \
     --version-code "$VERSION_CODE" \
     --version-name "$VERSION_NAME" \
     "$BUILD_DIR/resources.zip"
@@ -73,10 +104,13 @@ aapt2 link \
 # ── 3. Compile Java ────────────────────────────────────────────────────────
 echo "[3/5] Compiling Java..."
 find src/ "$BUILD_DIR/gen/" -name "*.java" > "$BUILD_DIR/sources.txt"
-ecj \
-    -cp "$ANDROID_JAR" \
-    -d "$BUILD_DIR/classes" \
-    @"$BUILD_DIR/sources.txt"
+if [ "$JAVAC" = ecj ]; then
+    ecj -cp "$ANDROID_JAR" -d "$BUILD_DIR/classes" @"$BUILD_DIR/sources.txt"
+else
+    # Java 8 bytecode; -Xlint:-options mutes the "source 8 obsolete" notice.
+    "$JAVAC" -source 8 -target 8 -Xlint:-options -bootclasspath "$ANDROID_JAR" \
+        -d "$BUILD_DIR/classes" @"$BUILD_DIR/sources.txt"
+fi
 
 # ── 4. Dex ─────────────────────────────────────────────────────────────────
 echo "[4/5] Dexing..."
@@ -84,7 +118,7 @@ CLASS_FILES=$(find "$BUILD_DIR/classes" -name "*.class" | tr '\n' ' ')
 d8 \
     --output "$BUILD_DIR/dex" \
     --lib "$ANDROID_JAR" \
-    --min-api 23 \
+    --min-api "$MIN_SDK" \
     $CLASS_FILES
 
 # ── 5. Pack + sign ─────────────────────────────────────────────────────────
