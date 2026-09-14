@@ -28,12 +28,9 @@ Grab the APK from [Releases](../../releases) (or build it — see below) and ins
 ./build.sh
 ```
 
-Runs on Termux (on the phone itself) and on Ubuntu / any Linux with an Android SDK. The script auto-detects the toolchain and prints what it picked. No external Java libs — AES-128-ECB and MD5 come from `javax.crypto` / `java.security`. Output: `ImeiSwitcheroo.apk`.
+Requires `aapt2`, `ecj`, `d8`, `apksigner`, `zip` (e.g. `pkg install aapt2 ecj d8 apksigner zip` in Termux), an `android.jar`, a `framework-res.apk`, and a debug keystore — paths in `build.sh`. No external Java libs — AES-128-ECB and MD5 come from `javax.crypto` / `java.security`. Output: `ImeiSwitcheroo.apk`.
 
-- **Termux:** `pkg install aapt2 ecj d8 apksigner zip openjdk-17`, plus `~/.android/android.jar` and `~/.android/framework-res.apk` (`cp /system/framework/framework-res.apk ~/.android/`).
-- **Ubuntu:** Android SDK build-tools and `platforms;android-35` (Android Studio's SDK Manager, or `sdkmanager`), a JDK (`sudo apt install default-jdk`, or Android Studio's bundled one, which is found automatically), and `zip`. The SDK is located via `ANDROID_HOME` / `ANDROID_SDK_ROOT`, then `~/Android/Sdk`.
-
-The APK is signed with the standard Android debug key (`~/.android/debug.keystore`), generated with `keytool` if it doesn't exist. Every auto-detected piece can be overridden with an environment variable (`ANDROID_HOME`, `BUILD_TOOLS`, `ANDROID_JAR`, `FRAMEWORK_RES`, `JAVA_HOME`, `JAVAC`, `KEYSTORE`, …) — see the header of `build.sh`.
+On a desktop Linux machine the same script works with an Android SDK (build-tools + a platform) and either a JDK or Android Studio's bundled JBR: it finds the SDK via `ANDROID_SDK_ROOT`, `ANDROID_HOME`, or `~/Android/Sdk`, uses the platform `android.jar` in place of both Termux jars, and falls back from `ecj` to `javac`. `ANDROID_JAR`, `FRAMEWORK_RES`, and `KEYSTORE` can be overridden in the environment.
 
 `VERSION` is the single source of truth for `versionName`/`versionCode`; `build.sh` syncs `AndroidManifest.xml` from it on every build.
 
