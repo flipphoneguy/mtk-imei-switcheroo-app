@@ -145,15 +145,17 @@ public class MainActivity extends Activity {
         btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { confirmRestore(); }
         });
+
+        loadImei();
+        loadMac(MacKind.BT);
+        loadMac(MacKind.WIFI);
+        renderBackup();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadImei();
-        loadMac(MacKind.BT);
-        loadMac(MacKind.WIFI);
-        renderBackup();
+        // No re-probe here: each load spawns su, and on some root setups su steals focus and re-triggers onResume, which would loop. onCreate loads once; change/randomize/backup/restore re-load themselves when they change state.
     }
 
     // ─── IMEI section ──────────────────────────────────────────────────────
